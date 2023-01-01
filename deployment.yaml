@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: angular-config-app-poc
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: angular-config-app-poc
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: angular-config-app-poc
+    spec:
+      containers:
+        - name: angular-config-app-poc
+          image: angular-config-map-demo:v1
+          volumeMounts:
+            - name: tenant-env-config
+              mountPath: /usr/share/nginx/html/assets/config
+          ports:
+            - containerPort: 80
+      volumes:
+        - name: tenant-env-config
+          configMap:
+            name: tenant-env-config
